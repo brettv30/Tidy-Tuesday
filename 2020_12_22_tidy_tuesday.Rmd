@@ -115,8 +115,7 @@ As suspected, each of these countries has an either negative or extremely low ra
 
 bigmac %>%
   ggplot(aes(gdp_dollar, dollar_price)) +
-  geom_point() + 
-  facet_wrap(vars(name))
+  geom_point()
 
 bigmac.lm <- lm(gdp_dollar~dollar_price, data=bigmac)
 
