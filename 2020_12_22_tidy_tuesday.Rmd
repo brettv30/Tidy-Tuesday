@@ -71,18 +71,53 @@ summary(bigmac)
 
 chile <- subset(bigmac, bigmac$name == 'Chile')
 
-chile %>% 
-  ggplot(aes(date, dollar_price)) +
-  geom_smooth()
+bm_ex_data <- bigmac %>%
+  select(date, name, local_price, dollar_price) %>%
+  mutate(bm_ex_rate = dollar_price / local_price)
+
+bm_ex_data
+
+smalldata <- subset(bm_ex_data, bm_ex_data$name == 'Chile' | bm_ex_data$name == 'Hungary' | bm_ex_data$name == 'Indonesia' | bm_ex_data$name == 'Japan' | bm_ex_data$name == 'South Korea')
+
+smalldata
+
+smalldata2 <- subset(bigmac, bm_ex_data$name == 'Chile' | bm_ex_data$name == 'Hungary' | bm_ex_data$name == 'Indonesia' | bm_ex_data$name == 'Japan' | bm_ex_data$name == 'South Korea')
+
+smalldata2
+  
+
+
+```
+Lets observe the countries with the smallest big mac exchange rates (>e-0.2)
+
+```{r Visualize}
+
+smalldata %>%
+  ggplot(aes(date, bm_ex_rate)) +
+  geom_point() +
+  facet_wrap(vars(name))
+
+```
+Now lets look at their raw index relative to the US dollar
+
+``` {r Vizualize}
+
+smalldata2 %>%
+  ggplot(aes(date, usd_raw)) +
+  geom_point() +
+  facet_wrap(vars(name))
+
+```
+As suspected, each of these countries has an either negative or extremely low raw index. 
+
+
+```{r Analysis}
 
 bigmac %>%
   ggplot(aes(gdp_dollar, dollar_price)) +
-  geom_point()
+  geom_point() + 
+  facet_wrap(vars(name))
 
-```
-This is a visualization that displays the gdp per person of each country and how much a big mac costs in that country. Lets try and predict the gdp per person when looking at the big mac price in dollars. 
-
-```
 bigmac.lm <- lm(gdp_dollar~dollar_price, data=bigmac)
 
 summary(bigmac.lm)
@@ -94,13 +129,55 @@ predict(bigmac.lm, newdata=new.data)
 ```
 # This tells us that if the big mac price in dollars is $3.50, the gdp per person of the country is $23,865.95. 
 
+``` {r Analysis}
+
+chile %>%
+  ggplot(aes(gdp_dollar, dollar_price)) +
+  geom_point()
+
+chile.lm <- lm(gdp_dollar~dollar_price, data=chile)
+
+summary(chile.lm)
+
+new.data = data.frame(dollar_price=4)
+
+predict(chile.lm, newdata = new.data)
+
+predict(chile.lm, newdata = new.data, interval = "predict")
+
+cor.test(chile$gdp_dollar, chile$dollar_price, method = 'pearson')
+
+```
+This shows us that when looking at chile, it is difficult to make accurate predictions of gdp per person based off the price of a big mac in dollars. These two variables are not significant with one another after looking at the results from the pearson correlation test. 
+ 
+```{r Analysis}
+
+chile %>%
+  ggplot(aes(gdp_dollar, local_price)) +
+  geom_point()
+
+chile.lm2 <- lm(gdp_dollar~local_price, data=chile)
+
+summary(chile.lm2)
+
+new.data = data.frame(local_price=2600)
+
+predict(chile.lm2, newdata = new.data)
+
+predict(chile.lm2, newdata = new.data, interval = "predict")
+
+cor.test(chile$gdp_dollar, chile$local_price, method = 'pearson')
+
+```
+This also shows that in chile, it is still difficult to make accurate predictions on gdp per person based off the price of a big mac in pesos. These two variables are not significant with one another after looking at the results from the pearson correlation test. 
+
+
 
 # Visualize
 
 Using your processed dataset, create your unique visualization.
 
 ```{r Visualize}
-
 
   
 ```
