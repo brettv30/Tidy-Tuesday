@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(tidytuesdayR)
 library(scales)
-
+theme_set(theme_dark())
 ```
 
 # Load the weekly Data
