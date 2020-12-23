@@ -95,7 +95,8 @@ Lets observe the countries with the smallest big mac exchange rates (>e-0.2)
 smalldata %>%
   ggplot(aes(date, bm_ex_rate)) +
   geom_point() +
-  facet_wrap(vars(name))
+  expand_limits(y = 0) +
+  facet_wrap(vars(name), scales = 'free_y')
 
 ```
 Now lets look at their raw index relative to the US dollar
@@ -177,6 +178,8 @@ This also shows that in chile, it is still difficult to make accurate prediction
 Using your processed dataset, create your unique visualization.
 
 ```{r Visualize}
+
+
 
   
 ```
