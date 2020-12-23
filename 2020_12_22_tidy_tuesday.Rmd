@@ -97,7 +97,7 @@ smalldata %>%
   expand_limits(y = 0) +
   facet_wrap(vars(name), scales = 'free_y') +
   theme(legend.position = 'none') +
-  labs(x = 'year', y = 'Big Mack Exchange Rate', 
+  labs(x = 'year', y = 'Big Mac Exchange Rate', 
        title = 'Lowest 5 countries big mack exchange rates compared to the US dollar')
 
 ```
@@ -111,7 +111,7 @@ smalldata2 %>%
   facet_wrap(vars(name)) +
   theme(legend.position = 'none') +
   labs(x = 'year', y = '$ raw index', 
-       title = 'Over and Under values of the 5 lowest big mack exchange rate countries')
+       title = 'Over and Under values of the 5 lowest big mac exchange rate countries')
 
 ```
 As suspected, each of these countries has an either negative or extremely low raw index. 
@@ -123,7 +123,7 @@ bigmac %>%
   ggplot(aes(gdp_dollar, dollar_price, color = name)) +
   geom_point() +
   theme(legend.position = 'none') +
-  labs( x = 'GDP per person', y = 'Big Mack price in US $', title = 'Big mack price vs GDP per person')
+  labs( x = 'GDP per person', y = 'Big Mac price in US $', title = 'Big mac price vs GDP per person')
 
 bigmac.lm <- lm(gdp_dollar~dollar_price, data=bigmac)
 
