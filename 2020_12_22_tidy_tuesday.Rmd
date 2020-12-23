@@ -96,7 +96,9 @@ smalldata %>%
   geom_line() +
   expand_limits(y = 0) +
   facet_wrap(vars(name), scales = 'free_y') +
-  theme(legend.position = 'none')
+  theme(legend.position = 'none') +
+  labs(x = 'year', y = 'Big Mack Exchange Rate', 
+       title = 'Lowest 5 countries big mack exchange rates compared to the US dollar')
 
 ```
 Now lets look at their raw index relative to the US dollar
@@ -107,7 +109,9 @@ smalldata2 %>%
   ggplot(aes(date, usd_raw, color = name)) +
   geom_line() +
   facet_wrap(vars(name)) +
-  theme(legend.position = 'none')
+  theme(legend.position = 'none') +
+  labs(x = 'year', y = '$ raw index', 
+       title = 'Over and Under values of the 5 lowest big mack exchange rate countries')
 
 ```
 As suspected, each of these countries has an either negative or extremely low raw index. 
