@@ -19,7 +19,6 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(tidytuesdayR)
 library(scales)
-theme_set(theme_dark())
 
 ```
 
@@ -93,10 +92,11 @@ Lets observe the countries with the smallest big mac exchange rates (>e-0.2)
 ```{r Visualize}
 
 smalldata %>%
-  ggplot(aes(date, bm_ex_rate)) +
-  geom_point() +
+  ggplot(aes(date, bm_ex_rate, color = name)) +
+  geom_line() +
   expand_limits(y = 0) +
-  facet_wrap(vars(name), scales = 'free_y')
+  facet_wrap(vars(name), scales = 'free_y') +
+  theme(legend.position = 'none')
 
 ```
 Now lets look at their raw index relative to the US dollar
@@ -104,9 +104,10 @@ Now lets look at their raw index relative to the US dollar
 ``` {r Vizualize}
 
 smalldata2 %>%
-  ggplot(aes(date, usd_raw)) +
-  geom_point() +
-  facet_wrap(vars(name))
+  ggplot(aes(date, usd_raw, color = name)) +
+  geom_line() +
+  facet_wrap(vars(name)) +
+  theme(legend.position = 'none')
 
 ```
 As suspected, each of these countries has an either negative or extremely low raw index. 
