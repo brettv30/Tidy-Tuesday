@@ -120,8 +120,10 @@ As suspected, each of these countries has an either negative or extremely low ra
 ```{r Analysis}
 
 bigmac %>%
-  ggplot(aes(gdp_dollar, dollar_price)) +
-  geom_point()
+  ggplot(aes(gdp_dollar, dollar_price, color = name)) +
+  geom_point() +
+  theme(legend.position = 'none') +
+  labs( x = 'GDP per person', y = 'Big Mack price in US $', title = 'Big mack price vs GDP per person')
 
 bigmac.lm <- lm(gdp_dollar~dollar_price, data=bigmac)
 
