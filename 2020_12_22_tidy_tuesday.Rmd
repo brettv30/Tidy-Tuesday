@@ -121,10 +121,12 @@ As suspected, each of these countries has an either negative or extremely low ra
 ```{r}
 
 bigmac %>%
-  ggplot(aes(gdp_dollar, dollar_price, color = country)) +
-  geom_point() +
-  theme(legend.position = 'none') +
-  labs( x = 'GDP per person', y = 'Big Mac price in US $', title = 'Big mac price vs GDP per person')
+  add_count(country, name = 'country_total') %>%
+  filter(country_total == max(country_total)) %>%
+  ggplot(aes(gdp_dollar, dollar_price)) +
+  geom_point(aes(color = country)) +
+  geom_smooth() +
+  labs( x = 'GDP per person', y = 'Big Mac price in US $', title = 'Big mac price vs GDP per person', subtitle = 'Colored by country')
 
 bigmac.lm <- lm(gdp_dollar~dollar_price, data=bigmac)
 
