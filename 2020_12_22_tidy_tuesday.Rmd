@@ -62,25 +62,26 @@ Explore the data and process it into a nice format for plotting! Access each dat
 
 ```{r Wrangle}
 
-bigmac <- tt$`big-mac`
+bigmac <- tt$`big-mac` %>%
+  rename(country = name)
 
 View(bigmac)
 
 summary(bigmac)
 
-chile <- subset(bigmac, bigmac$name == 'Chile')
+chile <- subset(bigmac, bigmac$country == 'Chile')
 
 bm_ex_data <- bigmac %>%
-  select(date, name, local_price, dollar_price) %>%
+  select(date, country, local_price, dollar_price) %>%
   mutate(bm_ex_rate = dollar_price / local_price)
 
 bm_ex_data
 
-smalldata <- subset(bm_ex_data, bm_ex_data$name == 'Chile' | bm_ex_data$name == 'Hungary' | bm_ex_data$name == 'Indonesia' | bm_ex_data$name == 'Japan' | bm_ex_data$name == 'South Korea')
+smalldata <- subset(bm_ex_data, bm_ex_data$country == 'Chile' | bm_ex_data$country == 'Hungary' | bm_ex_data$country == 'Indonesia' | bm_ex_data$country == 'Japan' | bm_ex_data$country == 'South Korea')
 
 smalldata
 
-smalldata2 <- subset(bigmac, bm_ex_data$name == 'Chile' | bm_ex_data$name == 'Hungary' | bm_ex_data$name == 'Indonesia' | bm_ex_data$name == 'Japan' | bm_ex_data$name == 'South Korea')
+smalldata2 <- subset(bigmac, bm_ex_data$country == 'Chile' | bm_ex_data$country == 'Hungary' | bm_ex_data$country == 'Indonesia' | bm_ex_data$country == 'Japan' | bm_ex_data$country == 'South Korea')
 
 smalldata2
   
@@ -89,13 +90,13 @@ smalldata2
 ```
 Lets observe the countries with the smallest big mac exchange rates (>e-0.2)
 
-```{r Visualize}
+```{r}
 
 smalldata %>%
-  ggplot(aes(date, bm_ex_rate, color = name)) +
+  ggplot(aes(date, bm_ex_rate, color = country)) +
   geom_line() +
   expand_limits(y = 0) +
-  facet_wrap(vars(name), scales = 'free_y') +
+  facet_wrap(vars(country), scales = 'free_y') +
   theme(legend.position = 'none') +
   labs(x = 'year', y = 'Big Mac Exchange Rate', 
        title = 'Lowest 5 countries big mack exchange rates compared to the US dollar')
@@ -103,12 +104,12 @@ smalldata %>%
 ```
 Now lets look at their raw index relative to the US dollar
 
-``` {r Vizualize}
+``` {r}
 
 smalldata2 %>%
-  ggplot(aes(date, usd_raw, color = name)) +
+  ggplot(aes(date, usd_raw, color = country)) +
   geom_line() +
-  facet_wrap(vars(name)) +
+  facet_wrap(vars(country)) +
   theme(legend.position = 'none') +
   labs(x = 'year', y = '$ raw index', 
        title = 'Over and Under values of the 5 lowest big mac exchange rate countries')
@@ -117,10 +118,10 @@ smalldata2 %>%
 As suspected, each of these countries has an either negative or extremely low raw index. 
 
 
-```{r Analysis}
+```{r}
 
 bigmac %>%
-  ggplot(aes(gdp_dollar, dollar_price, color = name)) +
+  ggplot(aes(gdp_dollar, dollar_price, color = country)) +
   geom_point() +
   theme(legend.position = 'none') +
   labs( x = 'GDP per person', y = 'Big Mac price in US $', title = 'Big mac price vs GDP per person')
@@ -136,7 +137,7 @@ predict(bigmac.lm, newdata=new.data)
 ```
 # This tells us that if the big mac price in dollars is $3.50, the gdp per person of the country is $23,865.95. 
 
-``` {r Analysis}
+``` {r}
 
 chile %>%
   ggplot(aes(gdp_dollar, dollar_price)) +
@@ -157,7 +158,7 @@ cor.test(chile$gdp_dollar, chile$dollar_price, method = 'pearson')
 ```
 This shows us that when looking at chile, it is difficult to make accurate predictions of gdp per person based off the price of a big mac in dollars. These two variables are not significant with one another after looking at the results from the pearson correlation test. 
  
-```{r Analysis}
+```{r}
 
 chile %>%
   ggplot(aes(gdp_dollar, local_price)) +
