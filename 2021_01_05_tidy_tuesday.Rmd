@@ -108,7 +108,7 @@ transit %>%
   geom_col(aes(country, avg_length, color = country)) +
   coord_flip() +
   theme(legend.position = 'none') +
-  labs(title = "Which country has the lowest average line length?", subtitle = "Answer: DE (Germany)", x = "Country", y = "Average Line Length")
+  labs(title = "Which country has the lowest average line length?", subtitle = "Answer: DE (Germany)", x = "Country", y = "Average Line Length (in km)")
 
 ```
 
@@ -119,7 +119,12 @@ transit %>%
   summarise(avg_length = mean(length, na.rm = TRUE),
             avg_cost_km_mil = mean(cost_km_millions, na.rm = TRUE)) %>%
   filter(avg_length < 10, avg_cost_km_mil > 250) %>%
-  arrange(desc(avg_cost_km_mil))
+  ggplot(aes(avg_length,avg_cost_km_mil)) +
+  geom_col() +
+  geom_text(aes(label = country, color = country)) +
+  xlim(2, 10) +
+  theme(legend.position = 'none')  +
+  labs(title = "Top ten countries that spend the most (US Millions) per km", caption = "Notice that all of these countries have an average of less than 10km per transit line. Why are they all spending so much money?", x = "Average line length (in Km)", y = "Average cost per km (in US millions)")
 
 ```
 Check out the prices that the US and New Zealand are paying per kilometer, that is crazy for how small their average line is!
@@ -153,7 +158,7 @@ Save your image for sharing. Be sure to use the `#TidyTuesday` hashtag in your p
 
 # This will save your most recent plot
 ggsave(
-  filename = "My TidyTuesday Plot.png",
+  filename = "1-5-21_image.png",
   device = "png")
 
 ```
