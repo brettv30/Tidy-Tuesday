@@ -69,6 +69,8 @@ View(bigmac)
 
 summary(bigmac)
 
+filter(bigmac, iso_a3 %in% c('ARG','USA','RUS'))
+
 chile <- subset(bigmac, bigmac$country == 'Chile')
 
 bm_ex_data <- bigmac %>%

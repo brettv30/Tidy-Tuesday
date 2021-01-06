@@ -1,0 +1,159 @@
+---
+title: "TidyTemplate"
+date: 2021-01-05
+output: html_output
+---
+
+# TidyTuesday
+
+Join the R4DS Online Learning Community in the weekly #TidyTuesday event!
+Every week we post a raw dataset, a chart or article related to that dataset, and ask you to explore the data.
+While the dataset will be “tamed”, it will not always be tidy! As such you might need to apply various R for Data Science techniques to wrangle the data into a true tidy format.
+The goal of TidyTuesday is to apply your R skills, get feedback, explore other’s work, and connect with the greater #RStats community!
+As such we encourage everyone of all skills to participate!
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(tidytuesdayR)
+theme_set(theme_dark())
+```
+
+# Load the weekly Data
+
+Dowload the weekly data and make available in the `tt` object.
+
+```{r Load}
+
+tt <- tt_load("2021-01-05")
+
+```
+
+
+# Readme
+
+Take a look at the readme for the weekly data to get insight on the dataset.
+This includes a data dictionary, source, and a link to an article on the data.
+
+```{r Readme, eval = interactive()}
+
+tt
+
+```
+
+
+# Glimpse Data
+
+Take an initial look at the format of the data available.
+
+```{r Glimpse}
+
+tt %>% 
+  map(glimpse)
+
+```
+
+```{r}
+transit <- tt$transit_cost
+
+head(transit)
+
+transit %>%
+  count(country) %>%
+  arrange(desc(n))
+
+transit %>%
+  filter(country %in% c("US", "CN", "UK", "CN")) %>%
+  select(country, city, length, tunnel, tunnel_per, cost_km_millions) %>%
+  arrange(desc(cost_km_millions))
+
+
+transit %>%
+  filter(country %in% c("US", "IN", "CN")) %>%
+  ggplot(aes(city, cost_km_millions)) +
+  geom_col(aes(fill = country)) +
+  coord_flip()
+
+
+transit %>%
+  filter(country %in% c("US", "CN", "IN")) %>%
+  ggplot() +
+  geom_point(aes(stations, cost_km_millions, color = country))
+```
+
+Lets take a look at the average cost per kilometer in US millions, only look at the countries with costs over $250,000,000. 
+
+```{r}
+transit %>%
+  group_by(country) %>%
+  summarise(avg_cost_km_mil = mean(cost_km_millions, na.rm = TRUE)) %>%
+  filter(avg_cost_km_mil > 250) %>%
+  ggplot() +
+  geom_col(aes(country, avg_cost_km_mil, color = country), na.rm = TRUE) +
+  coord_flip() +
+  theme(legend.position = 'none') +
+  labs(x = "Country", y = "Average cost per kilometer (in US millions)", title = "On average which three countries spend the most per kilometer?", subtitle = "Answer: USA, SG (Singapore), and NZ (New Zealand)")
+```
+
+Now lets take a look at the average line length in KM and lets look at the lines that were less than 10 kilometers.
+
+```{r}
+transit %>%
+  group_by(country) %>%
+  summarise(avg_length = mean(length, na.rm = TRUE)) %>%
+  filter(avg_length < 10) %>%
+  ggplot() +
+  geom_col(aes(country, avg_length, color = country)) +
+  coord_flip() +
+  theme(legend.position = 'none') +
+  labs(title = "Which country has the lowest average line length?", subtitle = "Answer: DE (Germany)", x = "Country", y = "Average Line Length")
+
+```
+
+Now lets look and see if we have some of the same countries in each of the above two visualizations
+```{r}
+transit %>%
+  group_by(country) %>%
+  summarise(avg_length = mean(length, na.rm = TRUE),
+            avg_cost_km_mil = mean(cost_km_millions, na.rm = TRUE)) %>%
+  filter(avg_length < 10, avg_cost_km_mil > 250) %>%
+  arrange(desc(avg_cost_km_mil))
+
+```
+Check out the prices that the US and New Zealand are paying per kilometer, that is crazy for how small their average line is!
+
+# Wrangle
+
+Explore the data and process it into a nice format for plotting! Access each dataset by name by using a dollarsign after the `tt` object and then the name of the data set.
+
+```{r Wrangle}
+
+
+
+```
+
+
+# Visualize
+
+Using your processed dataset, create your unique visualization.
+
+```{r Visualize}
+
+
+  
+```
+
+# Save Image
+
+Save your image for sharing. Be sure to use the `#TidyTuesday` hashtag in your post on twitter! 
+
+```{r}
+
+# This will save your most recent plot
+ggsave(
+  filename = "My TidyTuesday Plot.png",
+  device = "png")
+
+```
