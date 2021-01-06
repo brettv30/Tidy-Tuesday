@@ -1,2 +1,2 @@
-# Tidy-Tuesday
+# Tidy Tuesday
 My contributions to the #TidyTuesday challenge
