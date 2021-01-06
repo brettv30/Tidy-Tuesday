@@ -9,4 +9,4 @@ As a personal goal for 2021, I aim to work on Tidy Tuesday projects at least twi
 
 ## My Contributions
 ### 1/5/2021
-![first image](1-5-2021_image.png)
+![first image](https://github.com/brettv30/Tidy-Tuesday/blob/main/Images/1-5-21_image.png)
