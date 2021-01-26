@@ -64,17 +64,36 @@ Explore the data and process it into a nice format for plotting! Access each dat
 
 ```{r Wrangle}
 
+tidyplastic <- plastic %>%
+  pivot_longer(c(`empty`, `hdpe`, `ldpe`,`o`,`pet`,`pp`,`ps`,`pvc`,`grand_total`), names_to = "plastic_type", values_to = "count")
+
+tidyplastic <- tidyplastic %>%
+  mutate(country = case_when(
+    country %in% ("NIGERIA") ~ "Nigeria",
+    country %in% ("Taiwan_ Republic of China (ROC)") ~ "Taiwan",
+    TRUE ~ as.character(country)
+  ))
+
+View(tidyplastic)
+
 plastic %>% 
   filter(parent_company == "Grand Total", year == 2020) %>%
   select(country, year, parent_company, grand_total) %>%
   arrange(desc(grand_total))
 ```
-This shows us that for 2020, there isn't a 'Grand Total' parent company. We can create this ourselves if we decided that it is needed for our analysis.
+This shows us that for 2020, there isn't a 'Grand Total' parent company. We can create this ourselves if we decide it is needed for our analysis.
 
 ```{r}
-total_plastic_per_country <- 
-  
-plastic %>% 
+
+tidyplastic %>%
+  select(country, parent_company, plastic_type, count) %>%
+  filter(plastic_type != "grand_total" & parent_company != "Grand Total") %>%
+  arrange(desc(count))
+
+```
+
+```{r}
+total_plastic_per_country <- plastic %>% 
   filter(country != "EMPTY") %>%
   select(country, year, grand_total) %>%
   group_by(country, year) %>%
@@ -83,14 +102,17 @@ plastic %>%
 total_plastic_per_country %>%
   View()
 
-total_plastic_per_country %>%
-  select(country) %>%
-  summarise(country_count = n()) %>%
-  if_else(country_count < 2, rm(country), country_count)
+full_data <- total_plastic_per_country %>%
+  mutate(count = n()) %>%
+  filter(count == 2)
 
-total_plastic_per_country %>%
+View(full_data)
+
+full_data %>%
   ggplot(aes(country, total, fill = factor(year))) +
-  geom_col(position="fill")
+  geom_col(position="dodge") +
+  coord_flip() +
+  labs(y = "Total count of all types of plastic", x = "Country", title = "Which countries have the highest plastic count over 2019-2020?", fill = "Year")
 
 ```
 
