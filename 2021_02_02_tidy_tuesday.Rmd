@@ -71,9 +71,10 @@ hbcu_all %>%
   scale_y_continuous(labels = scales::percent) +
   scale_fill_brewer(palette = "Paired") +
   coord_flip() +
-  labs(x = "Year", y = "Percentage", title = "Percentage of Male vs Female enrollment at all HBCUs", subtitle = "39 year time period", caption = "Why did male enrollment numbers decrease until 2004? Is this in any way related to HS performance?")
+  labs(x = "Year", y = "Percentage", title = "Percentage of Male vs Female enrollment at all HBCUs", subtitle = "39 year time period", caption = "Why did male enrollment numbers decrease until 2004? Is this in any way related to HS grad rates?")
 
 ```
+
 
 # Wrangle
 
