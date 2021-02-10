@@ -70,7 +70,7 @@ stud_debt %>%
   ggplot() +
   geom_col(aes(factor(year), loan_debt, fill = race), position = "dodge") +
   scale_fill_brewer(palette = "Dark2") +
-  labs(x = "Year", y = "Loan Debt", fill = "Race", title = "Difference between races for student load debt",
+  labs(x = "Year", y = "Loan Debt", fill = "Race", title = "Difference amongst races regarding student load debt",
        subtitle = "Historically, Hispanics have the lowest student loan debt.",
        caption = "Could this be due to enrollment levels? Why have Black students been charged increasingly more since 04'.")
 
@@ -83,11 +83,45 @@ Using your processed dataset, create your unique visualization.
 
 ```{r Visualize}
 
+life_earn = tt$lifetime_earn
 
+View(life_earn)
+
+race_wealth = tt$race_wealth
+
+View(race_wealth)
+
+race_wealth %>%
+  filter(type == "Average", race == c("Black", "White", "Hispanic")) %>%
+  ggplot() +
+  geom_boxplot(aes(race, wealth_family, fill = race)) +
+  scale_fill_brewer(palette = "Dark2")+
+  theme(legend.position = "none") +
+  labs(x = "Race", y = "Family Wealth", title = "Differences amongst races regarding family wealth",
+       subtitle = "Why do black people have the lowest family income and the highest student loan debt?")
 
 
   
 ```
+```{r}
+
+income_dist = tt$income_distribution
+
+View(income_dist)
+
+income_dist %>%
+  filter(year >= 2016, race == c("White Alone", "Black Alone", "Asian Alone", "Hispanic (Any Race)")) %>%
+  ggplot() +
+  geom_col(aes(reorder(income_bracket, -income_distribution), income_distribution, fill = race)) +
+  scale_fill_brewer(palette = "Dark2") +
+  coord_flip() +
+  labs(x = "Income Bracket", y = "Income Distribution", fill = "Race", 
+       title = "Income Distribution for each Income Bracket by Race")
+
+
+
+```
+
 
 # Save Image
 
