@@ -1,0 +1,134 @@
+---
+title: "TidyTemplate"
+date: 2021-06-02
+output: html_output
+---
+
+# TidyTuesday
+
+Join the R4DS Online Learning Community in the weekly #TidyTuesday event!
+Every week we post a raw dataset, a chart or article related to that dataset, and ask you to explore the data.
+While the dataset will be “tamed”, it will not always be tidy! As such you might need to apply various R for Data Science techniques to wrangle the data into a true tidy format.
+The goal of TidyTuesday is to apply your R skills, get feedback, explore other’s work, and connect with the greater #RStats community!
+As such we encourage everyone of all skills to participate!
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(tidytuesdayR)
+
+```
+
+# Load the weekly Data
+
+Dowload the weekly data and make available in the `tt` object.
+
+```{r Load}
+
+summary <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-06-01/summary.csv')
+
+challenges <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-06-01/challenges.csv')
+
+castaways <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-06-01/castaways.csv')
+
+viewers <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-06-01/viewers.csv')
+
+jury_votes <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-06-01/jury_votes.csv')
+
+```
+
+
+# Readme
+
+Take a look at the readme for the weekly data to get insight on the dataset.
+This includes a data dictionary, source, and a link to an article on the data.
+
+```{r Readme, eval = interactive()}
+
+tt
+
+```
+
+
+# Glimpse Data
+
+Take an initial look at the format of the data available.
+
+```{r Glimpse}
+
+tt %>% 
+  map(glimpse)
+
+```
+
+# Wrangle
+
+Explore the data and process it into a nice format for plotting! Access each dataset by name by using a dollarsign after the `tt` object and then the name of the data set.
+
+```{r Wrangle}
+
+viewers %>% 
+  summarise(title, viewers) %>%
+  arrange(desc(viewers))
+
+viewers <- viewers %>% 
+  mutate(season <- factor(season))
+
+viewers %>% 
+  group_by(season) %>%
+  summarise(season_count = n(),
+            avg_rating = round(sum(rating_18_49, na.rm = TRUE)/season_count,3)) %>% 
+  select(season, avg_rating) %>%
+  arrange(desc(avg_rating)) %>% 
+  ggplot() +
+  geom_col(aes(season, avg_rating, fill = avg_rating)) +
+  labs(title = "Survivor Ratings have decreased over time", x = "Season",
+       y = "Average Rating")
+
+viewers %>%
+  group_by(season) %>% 
+  summarise(viewers = sum(viewers, na.rm = TRUE)) %>%
+  ggplot() +
+  geom_line(aes(season, viewers, color = "red")) +
+  labs(title = "Viewership has declined over time", x = "Season", 
+       y = "Millions of Viewers")
+
+viewers %>% 
+  group_by(season) %>% 
+  summarise(season_count = n(),
+            viewers = sum(viewers, na.rm = TRUE),
+            avg_rating = round(sum(rating_18_49, na.rm = TRUE)/season_count,3)) %>% 
+  select(season, viewers, avg_rating) %>% 
+  ggplot() +
+  geom_col(aes(season, avg_rating, fill = avg_rating)) +
+  geom_line(aes(season, viewers/100, color = "Red"), size = 2) +
+  labs(title = "Do people still like Survivor?", subtitle = "Red Line indicates hundreds of millions of viewers per season", x = "Season", y = "Average Episode Rating")+
+  theme(legend.position = "none")
+
+```
+
+
+# Visualize
+
+Using your processed dataset, create your unique visualization.
+
+```{r Visualize}
+
+
+  
+```
+
+# Save Image
+
+Save your image for sharing. Be sure to use the `#TidyTuesday` hashtag in your post on twitter! 
+
+```{r}
+
+# This will save your most recent plot
+ggsave(
+  filename = "My TidyTuesday Plot.png",
+  device = "png")
+
+```
