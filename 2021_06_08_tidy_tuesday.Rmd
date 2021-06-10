@@ -1,0 +1,173 @@
+---
+title: "TidyTemplate"
+date: 2021-06-08
+output: html_output
+---
+
+# TidyTuesday
+
+Join the R4DS Online Learning Community in the weekly #TidyTuesday event!
+Every week we post a raw dataset, a chart or article related to that dataset, and ask you to explore the data.
+While the dataset will be “tamed”, it will not always be tidy! As such you might need to apply various R for Data Science techniques to wrangle the data into a true tidy format.
+The goal of TidyTuesday is to apply your R skills, get feedback, explore other’s work, and connect with the greater #RStats community!
+As such we encourage everyone of all skills to participate!
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(tidytuesdayR)
+library(scales)
+
+```
+
+# Load the weekly Data
+
+Dowload the weekly data and make available in the `tt` object.
+
+```{r Load}
+
+tt <- tt_load("2021-06-08")
+
+```
+
+
+# Readme
+
+Take a look at the readme for the weekly data to get insight on the dataset.
+This includes a data dictionary, source, and a link to an article on the data.
+
+```{r Readme, eval = interactive()}
+
+tt
+
+```
+
+
+# Glimpse Data
+
+Take an initial look at the format of the data available.
+
+```{r Glimpse}
+
+tt %>% 
+  map(glimpse)
+
+```
+
+# Wrangle
+
+Explore the data and process it into a nice format for plotting! Access each dataset by name by using a dollarsign after the `tt` object and then the name of the data set.
+
+```{r Wrangle}
+fishing <- tt$fishing
+
+fishing <- fishing %>% 
+  mutate(across(where(is.character), as.factor),
+         species = str_replace(str_to_title(species), "([^s])s$", "\\1"))
+
+
+fishing %>% 
+  group_by(species) %>% 
+  summarise(value = sum(values, na.rm = TRUE)) 
+
+sum_fish <- function(tbl){
+  
+  tbl %>% 
+  summarise(n_obs = n(),
+    value = sum(values, na.rm = TRUE)) %>% 
+  arrange(desc(value))
+  
+} 
+
+# The above code determines the fish that has been produced the most (to the nearest thousand pounds)
+
+fishing %>%  
+  group_by(year, species) %>% 
+  sum_fish()
+```
+
+```{r}
+
+fishing %>%
+  group_by(lake, species, year) %>%
+  filter(year > 1989 && year < 2000) %>% 
+  sum_fish() %>% 
+  summarize(total_prod = round(sum(value), 0), 
+            best_year = year[which.max(total_prod)]) %>% 
+  arrange(-total_prod) %>% 
+  ggplot(aes(best_year, total_prod, fill = lake)) +
+  geom_col() +
+  scale_y_log10() +
+  scale_x_continuous(breaks = seq(1990, 2000, 1)) +
+  scale_fill_brewer(palette="Spectral") +
+  labs(x = "Year", y = "Total Production (to the nearest thousand pounds)",
+       fill = "Great Lake", title = "Great Lakes fish production throughout the '90s") +
+  theme_dark()
+
+```
+
+```{r}
+
+fishing %>% 
+  group_by(species, year) %>% 
+  filter(year > 1989 && year < 2000) %>% 
+  sum_fish()  %>%
+  head(56) %>% 
+  ggplot(aes(year, value, fill = species)) +
+  geom_col() +
+  facet_wrap(~ species) +
+  scale_x_continuous(labels = c("90", "91", "92", "93", "94", "95", "96", "97", "98", "99", "00"),
+                     breaks = seq(1990, 2000, 1)) +
+  scale_fill_brewer(palette = "Set3") +
+  theme_dark() +
+  theme(legend.position = "none") +
+  labs(x = "Year", y = "Total Production (to the nearest thousand pounds)", 
+       title = "Highest produced fish in the Great Lakes during the '90s")
+
+
+```
+
+
+```{r}
+
+fishing %>%
+  group_by(species) %>% 
+  sum_fish() %>% 
+  head(5) %>% 
+  ggplot(aes(x = "", y = value, fill = species)) +
+  geom_bar(width = 1, stat = "identity", color = "black") +
+  geom_text(aes(label=paste(species, round(value, 0), sep = "\n")), position = position_stack(vjust = 0.5)) +
+  coord_polar("y", start = 0) +
+  scale_fill_brewer(palette = "YlOrRd") +
+  theme_void() +
+  theme(legend.position = "none") + 
+  labs(title = "Top 5 fish produced across all Great Lakes",
+       subtitle = "Number under species name equals thousand lbs produced")
+
+```
+
+
+# Visualize
+
+Using your processed dataset, create your unique visualization.
+
+```{r Visualize}
+
+
+  
+```
+
+# Save Image
+
+Save your image for sharing. Be sure to use the `#TidyTuesday` hashtag in your post on twitter! 
+
+```{r}
+
+# This will save your most recent plot
+ggsave(
+  filename = "Production throughout the nineties.png",
+  device = "png")
+
+```
