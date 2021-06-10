@@ -7,7 +7,7 @@ Tidy Tuesday is a weekly challenge where members of the #R4DS community can poli
 As a personal goal for 2021, I aim to work on Tidy Tuesday projects at least twice per month. This is in an effort to further improve my skills as a Data Scientist as well as improve my familiarity with R. You can find the code for each image on the main page of my repo. Just look for the folder that has the same year as above the image. 
 
 ## My Contributions
-### 2021/06/10 :fish: Commercial Fishing by [Great Lakes Fishery Commission](http://www.glfc.org/great-lakes-databases.php)
+### 2021/06/08 :fish: Commercial Fishing by [Great Lakes Fishery Commission](http://www.glfc.org/great-lakes-databases.php)
 ![fifth image](https://github.com/brettv30/Tidy-Tuesday/blob/main/Images/Production%20throughout%20the%20nineties.png)
 
 ### 2021/06/01 :desert_island: Survivor TV Show by [survivoR Package](https://github.com/doehm/survivoR)
