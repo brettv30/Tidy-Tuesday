@@ -148,6 +148,63 @@ fishing %>%
 
 ```
 
+```{r}
+
+# Practicing Anova Tests. First performing a test to determine which means test to run. 
+
+anova_practice <- fishing %>% 
+  group_by(lake) %>% 
+  filter(species == "Lake Whitefish") %>% 
+  summarise(n_obs = n(), 
+            tot_prod = sum(values, na.rm = TRUE),
+            avg_per_lake = mean(values, na.rm = TRUE),
+            sd_per_lake = sd(values, na.rm = TRUE))
+
+# Hypo Statement: 
+# HO: sigma_mich / sigma_hur = 1 
+# HA: sigma_mich / sigma_hur != 1
+
+f <- anova_practice$sd_per_lake[3] / anova_practice$sd_per_lake[2]
+
+f
+
+p <-  2 * pf(f, anova_practice$n_obs[3] - 1, anova_practice$n_obs[2] - 1, lower.tail = F)
+
+p
+
+# p < 0.05 -> Reject H0. Perform the TSHT assuming unequal variances.
+
+# Function to calculate the degrees of freedom for TSHT - Unequal variances
+
+unequal_var_df <-  function(sd_1, sd_2, n_1, n_2) {
+  
+  df <- (((sd_1^2/n_1)+(sd_2^2/n_2))^2/(((sd_1^2/n_1)^2/(n_1 - 1))+((sd_2^2/n_2)^2/(n_2 - 1))))
+  
+  return(df)
+  
+}
+
+# We think that the Lake Whitefish is produced more in Lake Michigan than in Lake Huron.
+# Lets test this hypothesis and find out!
+
+# Hypo Statement:
+# HO: avg_mich - avg_hur <= 0
+# HA: avg_mich - avg_hur > 0
+
+t <- (anova_practice$avg_per_lake[3] - anova_practice$avg_per_lake[2]) / sqrt((anova_practice$sd_per_lake[3]^2/anova_practice$n_obs[3])+(anova_practice$sd_per_lake[2]^2/anova_practice$n_obs[2]))
+
+t
+
+df <- unequal_var_df(anova_practice$sd_per_lake[3], anova_practice$sd_per_lake[2], anova_practice$n_obs[3], anova_practice$n_obs[2])
+
+df
+
+p <- pt(t, df, lower.tail = F)
+
+p # p < 0.0005 -> Reject HO. There is sufficient evidence to suggest that the Lake Whitefish is on average produced more from lake Michigan than from Lake Huron. 
+  
+```
+
 
 # Visualize
 
