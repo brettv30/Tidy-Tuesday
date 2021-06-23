@@ -100,11 +100,12 @@ no_outlier_peeps %>%
   ggplot(aes(tweet_info, tweet_data, fill = tweet_info)) +
   geom_bar(position = "dodge", stat="identity") +
   scale_y_log10() +
-  scale_fill_brewer(palette = "Spectral") +
+  scale_fill_brewer(palette = "Greens") +
   facet_wrap(~username) + 
-  labs(x = "", y = "Value", fill = "Tweet Info",
+  labs(x = "", y = "Number of interactions", fill = "Tweet Info",
        title = "Top Ten non-outliers that participated in #DuBois Challenge",
        subtitle = "Outliers were determined based on number of followers, retweets, likes, and quotes") +
+  theme_dark() +
   theme(axis.text.x = element_blank(),
         axis.ticks.x = element_blank())
 

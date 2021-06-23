@@ -79,8 +79,8 @@ records %>%
   mutate(diff = No - Yes) %>%
   ggplot() +
   geom_col(aes(diff, y=reorder(track, -diff, sum), fill = diff)) +
-  scale_fill_gradient(low = "red", high = "darkgreen") +
-  labs(title = "How much time do you gain by taking that shortcut?", x = "Time (seconds) gained by taking shortcut", y = "Track") +
+  scale_fill_gradient(low = "darkred", high = "red") +
+  labs(title = "How much time do you gain by taking that shortcut?", subtitle = "Better take the shortcuts on Rainbow Road and Wario Stadium!", x = "Time (seconds) gained by taking shortcut", y = "Track", caption = "Calculated by observing the fastest shortcut time subtracted by the fastest non-shortcut time.") +
   theme(legend.position = "none")
 
 ```
