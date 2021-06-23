@@ -18,6 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 library(tidytuesdayR)
+library(ggbump)
 
 ```
 
@@ -65,17 +66,12 @@ Explore the data and process it into a nice format for plotting! Access each dat
 
 ```{r Wrangle}
 
-parks$park_pct_city_data <- gsub("%", "", as.character(parks$park_pct_city_data))
+# Remove extra characters from interprettable data points & convert to double data types
 
-parks$park_pct_city_data <- as.double(parks$med_park_size_data)
-
-parks$pct_near_park_data <- gsub("%", "", as.character(parks$pct_near_park_data))
-
-parks$pct_near_park_data <- as.double(parks$med_park_size_data)
-
-parks$spend_per_resident_data <- gsub("\\$", "", as.character(parks$spend_per_resident_data))
-
-parks$spend_per_resident_data <- as.double(parks$spend_per_resident_data)
+parks <- parks %>% 
+  mutate(park_pct_city_data = as.double(gsub("%", "", as.character(park_pct_city_data))),
+         pct_near_park_data = as.double(gsub("%", "", as.character(pct_near_park_data))),
+         spend_per_resident_data = as.double(gsub("\\$", "", as.character(spend_per_resident_data))))
 
 # Lets only look at all North Carolina Cities
 
@@ -91,12 +87,6 @@ View(nc_parks)
 
 # Think of Visualizations to create for NC!
 
-nc_parks %>% 
-  ggplot(aes(rank, spend_per_resident_data)) +
-  geom_point(aes(color = city))
-
-
-
 ```
 
 
@@ -105,6 +95,18 @@ nc_parks %>%
 Using your processed dataset, create your unique visualization.
 
 ```{r Visualize}
+
+# Here we are observing the changes in city rank over time, Raleigh is consistently the best in NC with Charlotte falling off in a major way. Winston-Salem seems to be improving slowly. 
+
+nc_parks %>% 
+  ggplot(aes(as.factor(year), spend_per_resident_data, group = city,
+             fill = city)) +
+  geom_col(position = "dodge") + 
+  geom_text(aes(label = rank), vjust = 0, position = position_dodge(width = 1), size = 3) +
+  theme_dark() +
+  scale_fill_brewer(palette="Oranges") +
+  labs(x = "Year", y = "Spending per person ($)", title = "NC spending per person over time", subtitle = "Each column is topped with the city's TPL rank from that year.", fill = "City",
+       caption = "Notice Winston-Salem's increase in $ per person and rank over the last 5 years.")
 
 
   
@@ -118,7 +120,7 @@ Save your image for sharing. Be sure to use the `#TidyTuesday` hashtag in your p
 
 # This will save your most recent plot
 ggsave(
-  filename = "My TidyTuesday Plot.png",
+  filename = "NC TPL spending over time.png",
   device = "png")
 
 ```
