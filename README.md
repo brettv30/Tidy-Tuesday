@@ -4,7 +4,7 @@
 Tidy Tuesday is a weekly challenge where members of the #R4DS community can polish their data cleansing, analysis, and visualization skills with packages in the [`{tidyverse}`](https://www.tidyverse.org) realm. The repo where all the information is posted can be found here at [tidytuesday](https://github.com/rfordatascience/tidytuesday).
 
 ## Why am I participating?
-As a personal goal for 2021, I aim to work on Tidy Tuesday projects at least twice per month. This is in an effort to further improve my skills as a Data Scientist as well as improve my familiarity with R. You can find the code for each image on the main page of my repo. Just look for the folder that has the same year as above the image. 
+As a personal goal for 2021, I aim to work on more Tidy Tuesday projects. This is in an effort to further improve my skills at visualizations as well as improve my familiarity with R. You can find the code for each image on the main page of my repo by finding the folder that has the same year as above each image. 
 
 ## My Contributions
 ### 2021/06/22 :national_park: Park Access by [The Trust for Public Land](https://www.tpl.org/parks-and-an-equitable-recovery-parkscore-report)
